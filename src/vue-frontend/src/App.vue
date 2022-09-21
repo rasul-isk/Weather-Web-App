@@ -1,6 +1,8 @@
 <template>
+
+  <PageLoader/>
   <div id="app" class="min-vh-100 bg-light" style="padding-top: 60px">
-    <h1>Weather Information</h1>
+    <h1 style="color: #15D6A0;">Weather in Estonia</h1>
     <hr class="center-line">
     <Weather/>
   </div>
@@ -8,10 +10,12 @@
 
 <script>
 import Weather from "@/components/Weather";
+import PageLoader from "@/components/PageLoader";
 
 export default {
   name: 'App',
   components: {
+    PageLoader,
     Weather
   },
   // mounted: function () { }

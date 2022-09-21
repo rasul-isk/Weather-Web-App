@@ -1,102 +1,110 @@
 <template>
+  <div v-if="info.length!=0">
 
-  <div class="container" style="width:55%;">
-    <h3>General Information</h3>
-    <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's
-      standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a
-      type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting,
-      remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing
-      Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions
-      of Lorem Ipsum.</p>
-    <h4>Location Based Information</h4>
-  </div>
 
-  <section class="dropdown-wrapper">
+    <div class="container" style="width:55%;">
+      <h2>Overall Information</h2>
+      <h4>From {{ this.info[0].get('night').get('tempmin') }}° to {{ this.info[0].get('night').get('tempmax') }}°</h4>
+      <h5> Date: {{ this.info[0].get('date') }}</h5>
+      <p style="width:70%;margin-right: auto; margin-left: auto;"> {{ this.info[0].get('night').get('text') }}</p>
 
-    <div @click="isVisible = !isVisible" class="selected-item">
-      <span v-if="selectedItem"> {{ selectedItem }}</span>  <!-- selectedItem.name -->
-      <span v-else>Select City</span>  <!-- selectedItem.name -->
-      <svg :class="isVisible ? 'dropdown' : ''"
-           class="drop-down-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
-        <path fill="none" d="M0 0h24v24H0z"/>
-        <path d="M12 10.828l-4.95 4.95-1.414-1.414L12 8l6.364 6.364-1.414 1.414z"/>
-      </svg>
+      <!--    CREATON BUTTON!!!!!-->
+      <p v-if="this.info[0].get('night').get('peipsi') != ''"> Peipsi: {{ this.info[0].get('night').get('peipsi') }}</p>
+      <p v-if="this.info[0].get('night').get('sea') != ''"> {{ this.info[0].get('night').get('sea') }}</p>
+
+      <h4>City Information</h4>
     </div>
 
-    <div :class="isVisible ? 'visible' : 'invisible'" class="dropdown-popover">
-      <input v-model="searchQuery" type="text" placeholder="Pick for city"/>
-      <span v-if="filteredUser.length ===0">No data found!</span>
-      <div class="options">
-        <ul>
-          <!--          <li v-for="(user,index) in userArray" :key="`user-${index}`"> {{ user.name }}</li> FOR LISTING ELEMENTS FRom API REQUEST -->
-          <!--          <li v-for="city in cityArray" v-bind:key ="city.id"> {{ city }}</li>-->
-          <li @click="selectItem(city)" v-for="city in filteredUser" v-bind:key="city.id"> {{ city }}</li>
-          <!--        HEREEEEEEEEEEEEEEEEEEEEEE-->
-        </ul>
+    <section class="dropdown-wrapper">
+
+      <div @click="isVisible = !isVisible" class="selected-item">
+        <span v-if="selectedItem"> {{ selectedItem }}</span>  <!-- selectedItem.name -->
+        <span v-else>Select City</span>  <!-- selectedItem.name -->
+        <svg :class="isVisible ? 'dropdown' : ''"
+             class="drop-down-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+          <path fill="none" d="M0 0h24v24H0z"/>
+          <path d="M12 10.828l-4.95 4.95-1.414-1.414L12 8l6.364 6.364-1.414 1.414z"/>
+        </svg>
       </div>
+
+      <div :class="isVisible ? 'visible' : 'invisible'" class="dropdown-popover">
+        <input v-model="searchQuery" type="text" placeholder="Pick for city"/>
+        <span v-if="filteredUser.length ===0">No data found!</span>
+        <div class="options">
+          <ul>
+            <!--          <li v-for="(user,index) in userArray" :key="`user-${index}`"> {{ user.name }}</li> FOR LISTING ELEMENTS FRom API REQUEST -->
+            <!--          <li v-for="city in cityArray" v-bind:key ="city.id"> {{ city }}</li>-->
+            <li @click="selectItem(city)" v-for="city in filteredUser" v-bind:key="city.id"> {{ city }}</li>
+            <!--        HEREEEEEEEEEEEEEEEEEEEEEE-->
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <div v-if="selectedItem!=''" class="container" style="width:55%">
+      <h1>{{ this.info[0].get('night') }}</h1>
     </div>
-  </section>
 
-  <!--<section>-->
-  <!--    <div class="switch">-->
-  <!--&lt;!&ndash;      DO YOU REMEMBER YOUTUBE VIDEO OF JS PROJECTS? USE IT TO DO SWITCH&ndash;&gt;-->
-  <!--      <div class="button rounded-5 shadow p-4">-->
-  <!--        <div class="text-uppercase">Daytime</div>-->
-  <!--      </div>-->
+    <!--<section>-->
+    <!--    <div class="switch">-->
+    <!--&lt;!&ndash;      DO YOU REMEMBER YOUTUBE VIDEO OF JS PROJECTS? USE IT TO DO SWITCH&ndash;&gt;-->
+    <!--      <div class="button rounded-5 shadow p-4">-->
+    <!--        <div class="text-uppercase">Daytime</div>-->
+    <!--      </div>-->
 
-  <!--      <div class="button rounded-5 shadow p-4" >-->
-  <!--        <div class="text-uppercase">Night</div>-->
-  <!--      </div>-->
-  <!--    </div>-->
-  <!--</section>-->
+    <!--      <div class="button rounded-5 shadow p-4" >-->
+    <!--        <div class="text-uppercase">Night</div>-->
+    <!--      </div>-->
+    <!--    </div>-->
+    <!--</section>-->
 
-  <!--    <div class="menu-item">-->
-  <!--      <a href="#">-->
-  <!--        Tartu-->
-  <!--      </a>-->
-  <!--    </div>-->
-
-
-  <!--      <label for="tartu">Tartu</label>-->
-  <!--      <input type="radio" value="tartu" id="tartu" v-model="city" name="city">-->
-
-  <!--      <label for="talinn">Talinn</label>-->
-  <!--      <input type="radio" value="talinn" id="talinn" v-model="city" name="city">-->
-
-  <!--      <label for="tartu">Tartu</label>-->
-  <!--      <input type="radio" value="tartu1" id="tartu1" v-model="city" name="city">-->
-
-  <!--      <label for="tartu">Tartu</label>-->
-  <!--      <input type="radio" value="tartu2" id="tartu2" v-model="city" name="city">-->
+    <!--    <div class="menu-item">-->
+    <!--      <a href="#">-->
+    <!--        Tartu-->
+    <!--      </a>-->
+    <!--    </div>-->
 
 
-  <!--    <table class="table table-striped">-->
-  <!--      <thead>-->
-  <!--      <th> Datetime</th>-->
-  <!--      <th> Message</th>-->
-  <!--      <th> City</th>-->
-  <!--      <th> Condition</th>-->
-  <!--      <th> Max temp</th> &lt;!&ndash; (if exist) &ndash;&gt;-->
-  <!--      <th> Min temp</th>  &lt;!&ndash; (if exist) &ndash;&gt;-->
-  <!--      <th> Wind Direction</th> &lt;!&ndash; (if exist) &ndash;&gt;-->
-  <!--      <th> Min speed</th> &lt;!&ndash; (if exist) &ndash;&gt;-->
-  <!--      <th> Max speed</th> &lt;!&ndash; (if exist) &ndash;&gt;-->
-  <!--      </thead>-->
-  <!--      <tbody>-->
-  <!--      <tr v-for="weather in weatherInfo" v-bind:key="weather.id">-->
-  <!--        <td> {{ weather.id }}</td>-->
-  <!--        <td> {{ weather.dateTime }}</td>-->
-  <!--        <td> {{ weather.message }}</td>-->
-  <!--        <td> {{ weather.city }}</td>-->
-  <!--        <td> {{ weather.condition }}</td>-->
+    <!--      <label for="tartu">Tartu</label>-->
+    <!--      <input type="radio" value="tartu" id="tartu" v-model="city" name="city">-->
 
-  <!--      </tr>-->
+    <!--      <label for="talinn">Talinn</label>-->
+    <!--      <input type="radio" value="talinn" id="talinn" v-model="city" name="city">-->
 
-  <!--      </tbody>-->
-  <!--    </table>-->
+    <!--      <label for="tartu">Tartu</label>-->
+    <!--      <input type="radio" value="tartu1" id="tartu1" v-model="city" name="city">-->
 
-  <!--  <h4>City : {{city}}</h4>-->
+    <!--      <label for="tartu">Tartu</label>-->
+    <!--      <input type="radio" value="tartu2" id="tartu2" v-model="city" name="city">-->
 
+
+    <!--    <table class="table table-striped">-->
+    <!--      <thead>-->
+    <!--      <th> Datetime</th>-->
+    <!--      <th> Message</th>-->
+    <!--      <th> City</th>-->
+    <!--      <th> Condition</th>-->
+    <!--      <th> Max temp</th> &lt;!&ndash; (if exist) &ndash;&gt;-->
+    <!--      <th> Min temp</th>  &lt;!&ndash; (if exist) &ndash;&gt;-->
+    <!--      <th> Wind Direction</th> &lt;!&ndash; (if exist) &ndash;&gt;-->
+    <!--      <th> Min speed</th> &lt;!&ndash; (if exist) &ndash;&gt;-->
+    <!--      <th> Max speed</th> &lt;!&ndash; (if exist) &ndash;&gt;-->
+    <!--      </thead>-->
+    <!--      <tbody>-->
+    <!--      <tr v-for="weather in weatherInfo" v-bind:key="weather.id">-->
+    <!--        <td> {{ weather.id }}</td>-->
+    <!--        <td> {{ weather.dateTime }}</td>-->
+    <!--        <td> {{ weather.message }}</td>-->
+    <!--        <td> {{ weather.city }}</td>-->
+    <!--        <td> {{ weather.condition }}</td>-->
+
+    <!--      </tr>-->
+
+    <!--      </tbody>-->
+    <!--    </table>-->
+
+    <!--  <h4>City : {{city}}</h4>-->
+  </div>
 </template>
 
 <script>
@@ -108,7 +116,7 @@ export default {
       searchQuery: '',
       selectedItem: null,
       isVisible: false,
-      weatherInfo: [],
+      info: [],
       cityArray: [],
       city: null
     }
@@ -147,26 +155,24 @@ export default {
             let parser = new DOMParser();
             let xml = parser.parseFromString(data, "text/xml");
             let forecast = xml.getElementsByTagName('forecast');
-            //let info = new Array();
-            let singleDay = new Map();
+            this.info = [];
+            var today = new Date();
+            //var dd = String(today.getDate()).padStart(2, '0');
+            var dd = "22";
+            var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+            var yyyy = today.getFullYear();
 
-
-            // document.getElementById('output').textContent = data;
-            // console.log(xml);
-            // console.log("END OF DOC \n\n\n");
-
-            // console.log(forecast[0]);
-            // console.log("END OF DOC \n\n\n");
-
-            // console.log(forecast[0].getAttribute("date"));
-            // console.log("END OF DOC \n\n\n");
+            today = yyyy + '-' + mm + '-' + dd;
 
             for (let itr = 0; itr < forecast.length; itr++) {
               let date = forecast[itr].getAttribute("date");
-              let night = new Map();
-              singleDay.set('date', date);
-              let nightObj = forecast[itr].getElementsByTagName('night');
 
+              let singleDay = new Map();
+              let night = new Map();
+              let day = new Map();
+
+              let nightObj = forecast[itr].getElementsByTagName('night');
+              let dayTimeObj = forecast[itr].getElementsByTagName('day');
 
               let phenomenon = nightObj[0].getElementsByTagName("phenomenon")[0].innerHTML;
               let generalMin = nightObj[0].getElementsByTagName("tempmin")[0].innerHTML;
@@ -174,14 +180,8 @@ export default {
               let generalInfo = nightObj[0].getElementsByTagName("text")[0].innerHTML;
               let sea = nightObj[0].getElementsByTagName("sea")[0]?.innerHTML;
               let peipsi = nightObj[0].getElementsByTagName("peipsi")[0]?.innerHTML;
-              sea = sea ? "" : "";
-              peipsi = peipsi ? "" : "";
-
-              // console.log(nightObj[itr1]);
-              // console.log(`phenomenon: ${phenomenon}`);
-              // console.log(`tempmin: ${generalMin}`);
-              // console.log(`tempmax: ${generalMax}`);
-              // console.log(`text: ${generalInfo}`);
+              sea = sea ? sea : "";
+              peipsi = peipsi ? peipsi : "";
 
               night.set('phenomenon', phenomenon);
               night.set('tempmin', generalMin);
@@ -189,15 +189,91 @@ export default {
               night.set('text', generalInfo);
               night.set('sea', sea);
               night.set('peipsi', peipsi);
-              console.log(night);
 
+              phenomenon = dayTimeObj[0].getElementsByTagName("phenomenon")[0].innerHTML;
+              generalMin = dayTimeObj[0].getElementsByTagName("tempmin")[0].innerHTML;
+              generalMax = dayTimeObj[0].getElementsByTagName("tempmax")[0].innerHTML;
+              generalInfo = dayTimeObj[0].getElementsByTagName("text")[0].innerHTML;
+              sea = dayTimeObj[0].getElementsByTagName("sea")[0]?.innerHTML;
+              peipsi = dayTimeObj[0].getElementsByTagName("peipsi")[0]?.innerHTML;
+              sea = sea ? sea : "";
+              peipsi = peipsi ? peipsi : "";
 
+              if (date === today) {
+
+                let dayWindsArr = [];
+                let dayPlacesArr = [];
+                let nightWindsArr = [];
+                let nightPlacesArr = [];
+
+                let dayPlaces = dayTimeObj[0].getElementsByTagName('place');
+                let dayWind = dayTimeObj[0].getElementsByTagName('wind');
+
+                let nightPlaces = nightObj[0].getElementsByTagName('place');
+                let nightWind = nightObj[0].getElementsByTagName('wind');
+
+                for (let itr = 0; itr < dayPlaces.length; itr++) {
+                  let place = new Map();
+                  place.set('name', dayPlaces[itr].getElementsByTagName("name")[0].innerHTML);
+                  place.set('phenomenon', dayPlaces[itr].getElementsByTagName("phenomenon")[0].innerHTML);
+                  place.set('tempmax', dayPlaces[itr].getElementsByTagName("tempmax")[0].innerHTML);
+
+                  dayPlacesArr.push(place);
+                }
+
+                for (let itr = 0; itr < dayWind.length; itr++) {
+                  let wind = new Map();
+                  wind.set('name', dayWind[itr].getElementsByTagName("name")[0].innerHTML);
+                  wind.set('direction', dayWind[itr].getElementsByTagName("direction")[0].innerHTML);
+                  wind.set('speedmin', dayWind[itr].getElementsByTagName("speedmin")[0].innerHTML);
+                  wind.set('speedmax', dayWind[itr].getElementsByTagName("speedmax")[0].innerHTML);
+
+                  dayWindsArr.push(wind);
+                }
+
+                for (let itr = 0; itr < nightPlaces.length; itr++) {
+                  let place = new Map();
+                  place.set('name', nightPlaces[itr].getElementsByTagName("name")[0].innerHTML);
+                  place.set('phenomenon', nightPlaces[itr].getElementsByTagName("phenomenon")[0].innerHTML);
+                  place.set('tempmin', nightPlaces[itr].getElementsByTagName("tempmin")[0].innerHTML);
+
+                  nightPlacesArr.push(place);
+                }
+
+                for (let itr = 0; itr < nightWind.length; itr++) {
+                  let wind = new Map();
+                  wind.set('name', nightWind[itr].getElementsByTagName("name")[0].innerHTML);
+                  wind.set('direction', nightWind[itr].getElementsByTagName("direction")[0].innerHTML);
+                  wind.set('speedmin', nightWind[itr].getElementsByTagName("speedmin")[0].innerHTML);
+                  wind.set('speedmax', nightWind[itr].getElementsByTagName("speedmax")[0].innerHTML);
+
+                  nightWindsArr.push(wind);
+                }
+
+                day.set("places", dayPlacesArr);
+                day.set("winds", dayWindsArr);
+                night.set("winds", nightWindsArr);
+                night.set("places", nightPlacesArr);
+              }
+
+              day.set('phenomenon', phenomenon);
+              day.set('tempmin', generalMin);
+              day.set('tempmax', generalMax);
+              day.set('text', generalInfo);
+              day.set('sea', sea);
+              day.set('peipsi', peipsi);
+
+              singleDay.set('date', date);
+              singleDay.set('night', night);
+              singleDay.set('day', day);
+
+              this.info.push(singleDay);
             }
-            //
+            console.log(this.info);
 
-
-            //CHANGE IT to get from XML FILE
-            this.cityArray = ["Tartu", "Tallinn", "Dublin", "Armatur", "Beton", "Sement", "Sikim"]
+            this.cityArray = this.info[0].get('night').get('places').map((el) => {
+              return el.get('name')
+            });
           });
 
     }
