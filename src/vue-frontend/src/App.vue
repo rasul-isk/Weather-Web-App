@@ -1,15 +1,12 @@
 <template>
-  <!--  <img alt="Vue logo" src="./assets/logo.png">-->
-  <!--  <HelloWorld msg="Welcome to Your Vue.js App"/>-->
-  <div id="app">
+  <div id="app" class="min-vh-100 bg-light" style="padding-top: 60px">
+    <h1>Weather Information</h1>
+    <hr class="center-line">
     <Weather/>
   </div>
 </template>
 
 <script>
-// import axios from "axios";
-
-// import HelloWorld from './components/HelloWorld.vue'
 import Weather from "@/components/Weather";
 
 export default {
@@ -17,12 +14,7 @@ export default {
   components: {
     Weather
   },
-
-  mounted: function () {
-
-
-  }
-
+  // mounted: function () { }
 }
 </script>
 
@@ -32,7 +24,14 @@ export default {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+  color: #021510;
+  margin-top: 0px;
+}
+
+.center-line {
+  margin-left: auto;
+  margin-right: auto;
+  width: 60%;
+
 }
 </style>
