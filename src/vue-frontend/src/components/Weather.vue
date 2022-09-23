@@ -1,79 +1,221 @@
 <template>
   <div v-if="this.info.length">
-
     <div ref="main" class="weather-app" :class="this.backgroundImage">
       <div class="container">
-        <h3 class="brand">Weather in Estonia</h3>
-        <div style="padding: 50px">
-          <h1 class="temp">{{ this.info[0].get(this.dayTime).get('tempmax') }}°</h1>
+
+
+        <!--        <h3 class="brand">Weather in Estonia</h3>-->
+
+        <div style="margin-left: auto;">
+          <div @click="this.dayTime='day', selectItem(city)" class="day-button">Day</div>
+          <div @click="this.dayTime='night', selectItem(city)" class="day-button">Night</div>
+        </div>
+
+
+        <div class="time" style="padding-left: 2.8em; margin-top: auto; padding-left: 2em">
+          <h1 class="temp">{{ this.clock }}</h1>
+        </div>
+        <div class="time" style="padding-left: 2.7em">
+          <h1 style="font-size: 6em">{{ this.today }}</h1>
+        </div>
+
+        <div style="padding-bottom: 1em; padding-right: 1em; padding-left: 2.15em">
+          <!--          <h1 style="font-size: 8em">{{ this.info[0].get(this.dayTime).get('tempmax') }}°</h1>-->
+          <!--          <h1 v-if = "this.dayTime = 'night'" style="font-size: 8em">{{ this.info[0].get(this.dayTime).get('places').get(this.city).get('tempmin') }}°</h1>-->
+          <!--          <h1 v-if = "this.dayTime = 'day'" style="font-size: 8em">{{ this.info[0].get(this.dayTime).get('places').get(this.city).get('tempmax') }}°</h1>-->
+          <h1 v-if="this.dayTime == 'day'" style="font-size: 8em">{{ this.cityInfo.get('tempmax') }}°</h1>
+          <h1 v-else style="font-size: 8em">{{ this.cityInfo.get('tempmin') }}°</h1>
           <div class="city-time">
-            <h1 class="name">{{ this.cityInfo.get('name') }}</h1>
-            <small>
-              <span class="time"> {{ this.clock }} <p> </p></span>
-              <span class="date"> {{ this.today }}</span>
-            </small>
+            <h1 style="font-size: 5em">{{ this.cityInfo.get('name') }}</h1>
           </div>
 
           <div class="weather">
-            <!--               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill="none" d="M0 0h24v24H0z"/><path d="M12 18a6 6 0 1 1 0-12 6 6 0 0 1 0 12zM11 1h2v3h-2V1zm0 19h2v3h-2v-3zM3.515 4.929l1.414-1.414L7.05 5.636 5.636 7.05 3.515 4.93zM16.95 18.364l1.414-1.414 2.121 2.121-1.414 1.414-2.121-2.121zm2.121-14.85l1.414 1.415-2.121 2.121-1.414-1.414 2.121-2.121zM5.636 16.95l1.414 1.414-2.121 2.121-1.414-1.414 2.121-2.121zM23 11v2h-3v-2h3zM4 11v2H1v-2h3z"/></svg>-->
-            <span class="condition">☀️{{ this.info[0].get(this.dayTime).get('text') }}</span>
+            <img v-if="this.backgroundImage === 'bg-sunny'" src="./images/icons/sunIco.png" alt="sun Icon"/>
+            <img v-if="this.backgroundImage === 'bg-cloudy'" src="./images/icons/cloudIco.png" alt="cloud Icon"/>
+            <img v-if="this.backgroundImage === 'bg-rain'" src="./images/icons/rainIco.png" alt="rain Icon"/>
+            <img v-if="this.backgroundImage === 'bg-snow'" src="./images/icons/snowIco.png" alt="snow Icon"/>
+          </div>
+
+          <div class="weather">
+            <!--            <span class="condition" style="font-size: 1.2rem">{{ this.info[0].get(this.dayTime).get('text') }}</span>-->
+            <span class="condition" style="font-size: 1.5rem">{{ this.cityInfo.get('phenomenon') }}</span>
           </div>
         </div>
       </div>
 
       <div class="panel">
         <form id="locationInput">
-          <input type="text" class="search" placeholder="Search Location..."/>
-          <button type="submit" class="submit">
-            S
-          </button>
+          <section class="dropdown-wrapper">
+            <div @click="selectCityVisible = !selectCityVisible" class="selected-item">
+              <span v-if="selectedItem"> {{ selectedItem }}</span>
 
-          <!--          <section class="dropdown-wrapper">
-                      <div @click="selectCityVisible = !selectCityVisible" class="selected-item">
-                        <span v-if="selectedItem"> {{ selectedItem }}</span>
-                        &lt;!&ndash; selectedItem.name &ndash;&gt;
-                        <span v-else>Select City</span>
-                        &lt;!&ndash; selectedItem.name &ndash;&gt;
-                        <svg :class="selectCityVisible ? 'dropdown' : ''" class="drop-down-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
-                          <path fill="none" d="M0 0h24v24H0z" />
-                          <path d="M12 10.828l-4.95 4.95-1.414-1.414L12 8l6.364 6.364-1.414 1.414z" />
-                        </svg>
-                      </div>
+              <span v-else>Select City</span>
 
-                      <div :class="selectCityVisible ? 'visible' : 'invisible'" class="dropdown-popover">
-                        <input v-model="searchQuery" type="text" placeholder="Pick for city" />
-                        <span v-if="filteredUser.length === 0">No data found!</span>
-                        <div class="options">
-                          <ul>
-                            <li @click="selectItem(city)" v-for="city in filteredUser" v-bind:key="city.id">{{ city }}</li>
-                          </ul>
-                        </div>
-                      </div>
-                    </section>-->
+              <svg :class="selectCityVisible ? 'dropdown' : ''" class="drop-down-icon"
+                   xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+                <path fill="none" d="M0 0h24v24H0z"/>
+                <path d="M12 10.828l-4.95 4.95-1.414-1.414L12 8l6.364 6.364-1.414 1.414z"/>
+              </svg>
+            </div>
+
+            <div :class="selectCityVisible ? 'visible' : 'invisible'" class="dropdown-popover">
+              <input v-model="searchQuery" type="text" placeholder="Select City"/>
+              <span v-if="filteredUser.length === 0">No data found!</span>
+              <div class="options">
+                <ul class="cities">
+                  <li @click="selectItem(city)" v-for="city in filteredUser" v-bind:key="city.id">{{ city }}</li>
+                </ul>
+              </div>
+            </div>
+          </section>
         </form>
-        <ul class="cities">
-          <li class="city" @click="selectItem(city)" v-for="city in filteredUser" v-bind:key="city.id">{{ city }}</li>
-        </ul>
+
         <ul class="details">
           <h4>Weather Details</h4>
           <li>
-            <span> {{ this.cityInfo.get('phenomenon') }}</span>
-            <span class="cloud">89% CHANGE</span>
+            <span>General Information</span>
+            <span style="width: 65%;text-align: right;" class="cloud">{{
+                this.info[0].get(this.dayTime).get('text')
+              }}</span>
           </li>
           <li>
-            <span>Humidity</span>
-            <span class="humidity">64% CHANGE</span>
+            <span v-if="this.dayTime == 'day'">Maximum Temperature</span>
+            <span v-if="this.dayTime == 'night'">Minimum Temperature</span>
+
+            <span v-if="this.dayTime == 'day'" class="humidity">{{ this.cityInfo.get('tempmax') }}°</span>
+            <span v-if="this.dayTime == 'night'" class="humidity">{{ this.cityInfo.get('tempmin') }}°</span>
           </li>
-          <li>
-            <span>Wind</span>
-            <span class="wind">8 k/m</span>
+          <li style="margin: 0.2em 0">
+            <span v-if="this.info[0].get(this.dayTime).get('peipsi') != ''">Peipsi</span>
+            <span style="width: 65%; text-align: right" v-if="this.info[0].get(this.dayTime).get('peipsi') != ''">{{
+                this.info[0].get(this.dayTime).get('peipsi')
+              }}</span>
+          </li>
+
+          <li style="margin: 0.2em 0">
+            <span v-if="this.info[0].get(this.dayTime).get('sea') != ''">Sea</span>
+            <span style="width: 65%; text-align: right" v-if="this.info[0].get(this.dayTime).get('sea') != ''">{{
+                this.info[0].get(this.dayTime).get('sea')
+              }}</span>
+          </li>
+
+          <!--
+                              <div v-if="!moreInformation" @click="moreInformation = !moreInformation" class="details-button">More information</div>
+
+                              <div v-if="moreInformation">
+                              </div>
+                              <div v-if="moreInformation" @click="moreInformation = !moreInformation" class="details-button">Less information</div>
+          -->
+        </ul>
+
+        <ul class="details">
+          <h4>Wind Details</h4>
+          <hr>
+          <div style="display: flex;">
+            <span style="width: 33.3%; text-align: left;">Location</span>
+            <span style="width: 33.3%; text-align: center;">Direction</span>
+            <span style="width: 33.3%; text-align: right;">Speed</span>
+          </div>
+          <hr style="border-top:dashed;">
+          <!--          <li>-->
+          <!--            <span style="width: 33.3%; text-align: left">Location</span>-->
+          <!--            <span style="width: 33.3%; text-align: center">Direction</span>-->
+          <!--            <span style="width: 33.3%; text-align: right">Speed</span>-->
+          <!--          </li>-->
+          <li class="wind" v-for="wind in this.info[0].get(this.dayTime).get('winds')" v-bind:key="wind.id">
+            <span style="width: 33.3%; text-align: left">{{ wind.get('name') }}</span>
+            <span style="width: 33.3%; text-align: center">{{ wind.get('direction') }} </span>
+            <span style="width: 33.3%; text-align: right">{{ wind.get('speedmin') }} to {{
+                wind.get('speedmax')
+              }} m/s</span>
           </li>
         </ul>
+
+
+        <ul class="details">
+          <h4>Weather for next 3 days</h4>
+
+          <hr>
+          <h5 style="text-align: center">{{ this.info[1].get('date').slice(8, 10) }}
+            {{ months[parseInt(this.info[1].get('date').slice(5, 7)) - 1] }} '{{
+              this.info[1].get('date').slice(2, 4)
+            }}</h5>
+          <hr style="border-top:dashed;">
+
+          <li>
+            <span>General Information</span>
+            <span style="width: 65%;text-align: right;">{{ this.info[1].get(this.dayTime).get('text') }}</span>
+          </li>
+          <li>
+            <span>Phenomenon</span>
+            <span>{{ this.info[1].get(this.dayTime).get('phenomenon') }}</span>
+          </li>
+          <li class="wind">
+            <span>Daytime Temperature</span>
+            <span>{{ this.info[1].get('day').get('tempmin') }}° to {{ this.info[1].get('day').get('tempmax') }}° </span>
+          </li>
+          <li class="wind">
+            <span>Nighttime Temperature</span>
+            <span>{{ this.info[1].get('night').get('tempmin') }}° to {{
+                this.info[1].get('night').get('tempmax')
+              }}° </span>
+          </li>
+
+          <hr>
+          <h5 style="text-align: center">{{ this.info[2].get('date').slice(8, 10) }}
+            {{ months[parseInt(this.info[2].get('date').slice(5, 7)) - 1] }} '{{
+              this.info[2].get('date').slice(2, 4)
+            }}</h5>
+          <hr style="border-top:dashed;">
+          <li>
+            <span>General Information</span>
+            <span style="width: 65%;text-align: right;">{{ this.info[2].get(this.dayTime).get('text') }}</span>
+          </li>
+          <li>
+            <span>Phenomenon</span>
+            <span>{{ this.info[2].get(this.dayTime).get('phenomenon') }}</span>
+          </li>
+          <li class="wind">
+            <span>Daytime Temperature</span>
+            <span>{{ this.info[2].get('day').get('tempmin') }}° to {{ this.info[2].get('day').get('tempmax') }}° </span>
+          </li>
+          <li class="wind">
+            <span>Nighttime Temperature</span>
+            <span>{{ this.info[2].get('night').get('tempmin') }}° to {{
+                this.info[2].get('night').get('tempmax')
+              }}° </span>
+          </li>
+
+          <hr>
+          <h5 style="text-align: center">{{ this.info[3].get('date').slice(8, 10) }}
+            {{ months[parseInt(this.info[3].get('date').slice(5, 7)) - 1] }} '{{
+              this.info[3].get('date').slice(2, 4)
+            }}</h5>
+          <hr style="border-top:dashed;">
+          <li>
+            <span>General Information</span>
+            <span style="width: 65%;text-align: right;">{{ this.info[3].get(this.dayTime).get('text') }}</span>
+          </li>
+          <li>
+            <span>Phenomenon</span>
+            <span>{{ this.info[3].get(this.dayTime).get('phenomenon') }}</span>
+          </li>
+          <li class="wind">
+            <span>Daytime Temperature</span>
+            <span>{{ this.info[3].get('day').get('tempmin') }}° to {{ this.info[3].get('day').get('tempmax') }}° </span>
+          </li>
+          <li class="wind">
+            <span>Nighttime Temperature</span>
+            <span>{{ this.info[3].get('night').get('tempmin') }}° to {{
+                this.info[3].get('night').get('tempmax')
+              }}° </span>
+          </li>
+
+        </ul>
       </div>
-
-
     </div>
-    <!--    <div id="app" class="min-vh-100 bg-light" style="padding-top: 60px">
+  </div>
+  <!--    <div id="app" class="min-vh-100 bg-light" style="padding-top: 60px">
           <h1 style="color: #15D6A0;">Weather in Estonia</h1>
           <hr class="center-line">
         </div>
@@ -127,7 +269,7 @@
           </div>
 
           </div>-->
-    <!--    <section>
+  <!--    <section>
             <div class="switch">
         &lt;!&ndash;      DO YOU REMEMBER YOUTUBE VIDEO OF JS PROJECTS? USE IT TO DO SWITCH&ndash;&gt;
               <div class="button rounded-5 shadow p-4">
@@ -139,7 +281,7 @@
               </div>
             </div>
         </section>-->
-    <!--        <table class="table table-striped">
+  <!--        <table class="table table-striped">
               <thead>
               <th> Datetime</th>
               <th> Message</th>
@@ -163,9 +305,8 @@
 
               </tbody>
             </table>-->
-  </div>
-
 </template>
+
 
 <script>
 
@@ -184,7 +325,9 @@ export default {
       city: "Tartu",
       dayTime: "",
       clock: "",
-      today: new Date()
+      today: new Date(),
+      objectIndex: null,
+      months: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
     }
   },
   computed: {
@@ -204,15 +347,24 @@ export default {
 
   },
   methods: {
+    getNow: function () {
+      const today = new Date();
+      const hours = today.getHours() < 10 ? "0" + today.getHours().toString() : today.getHours();
+      const minutes = today.getMinutes() < 10 ? "0" + today.getMinutes().toString() : today.getMinutes();
+      const seconds = today.getSeconds() < 10 ? "0" + today.getSeconds().toString() : today.getSeconds();
+      const time = hours + ":" + minutes + ":" + seconds;
+      this.clock = time;
+    },
     selectItem(city) {
       // this.$refs.main.style.opacity = '0';
+      this.city = city;
       this.selectedItem = city;
       this.cityInfo = this.info[0].get(this.dayTime).get('places').filter((el) => {
         return el.get('name') === city
       })[0];
-      console.log(typeof this.info[0].get(this.dayTime).get('text').toLowerCase());
       this.$refs.main.style.opacity = '0';
-      if (this.cityInfo.get('phenomenon').toLowerCase().includes("cloudy")) {
+
+      if (this.cityInfo.get('phenomenon').toLowerCase().includes("cloud")) {
         this.backgroundImage = "bg-cloudy";
       }
 
@@ -220,9 +372,10 @@ export default {
           this.cityInfo.get('phenomenon').toLowerCase().includes("shower")) {
 
         this.backgroundImage = "bg-rain";
+        console.log("enters lol");
       }
 
-      if (this.cityInfo.get('phenomenon').toLowerCase().includes("sunny")) {
+      if (this.cityInfo.get('phenomenon').toLowerCase().includes("sun")) {
         this.backgroundImage = "bg-sunny";
       }
 
@@ -230,6 +383,8 @@ export default {
         this.backgroundImage = "bg-snow";
       }
       this.$refs.main.style.opacity = '1';
+      console.log(this.cityInfo);
+
       this.selectCityVisible = false;
       // console.log(this.cityInfo);
     },
@@ -243,9 +398,10 @@ export default {
             let xml = parser.parseFromString(data, "text/xml");
             let forecast = xml.getElementsByTagName('forecast');
             this.info = [];
-            var dd = String(parseInt(String(this.today.getDate()).padStart(2, '0')) + 1);
-            var mm = String(this.today.getMonth() + 1).padStart(2, '0'); //January is 0!
-            var yyyy = this.today.getFullYear();
+            let dd = String(this.today.getDate()).padStart(2, '0');
+            let dd1 = String(parseInt(String(this.today.getDate()).padStart(2, '0')) + 1);
+            let mm = String(this.today.getMonth() + 1).padStart(2, '0'); //January is 0!
+            let yyyy = this.today.getFullYear();
             this.clock = this.today.getHours() + ":" + this.today.getMinutes() + ":" + this.today.getSeconds();
             this.dayTime = this.today.getHours() > 20 || this.today.getHours() < 6 ? "night" : "day";
 
@@ -286,7 +442,7 @@ export default {
               sea = sea ? sea : "";
               peipsi = peipsi ? peipsi : "";
               console.log(this.today);
-              if (date === this.today) {
+              if (date === this.today || date === String(yyyy + '-' + mm + '-' + dd1)) {
 
                 let dayWindsArr = [];
                 let dayPlacesArr = [];
@@ -358,20 +514,23 @@ export default {
             }
             console.log(this.info);
 
-            this.cityArray = this.info[0].get('night').get('places').map((el) => {
+            this.cityArray = this.info[0].get(this.dayTime).get('places').map((el) => {
               return el.get('name')
             });
-            this.cityInfo = this.info[0].get('night').get('places').filter((el) => {
+            this.cityInfo = this.info[0].get(this.dayTime).get('places').filter((el) => {
               return el.get('name') === this.city
             })[0];
+            this.today = "Mon" + ", " + dd + " " + this.months[parseInt(mm) - 1] + " '" + yyyy.toString().slice(2);
             console.log(this.cityArray);
             console.log(this.cityInfo);
+            this.selectedDate = this.info[0].get('date');
           });
 
     }
   },
   created() {
     this.getWeather()
+    setInterval(this.getNow, 1000);
   }
 }
 </script>
@@ -436,11 +595,29 @@ h3 {
   z-index: 0;
 }
 
+.day-button {
+  margin-right: 2em;
+  margin-top: 2em;
+  background: rgba(110, 110, 110, 0.25);
+  box-shadow: 0 8x 32px 0 rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 2px solid rgba(255, 255, 255, 0.18);
+  padding: 1.4em;
+  cursor: pointer;
+  border-radius: 30px;
+}
+
+.day-button:hover {
+  background: #70878a;
+  color: #fff;
+}
+
 .container {
   position: absolute;
   top: 0;
   left: 0;
-  width: 100%;
+  width: 60%;
   height: 100%;
   display: flex;
   justify-content: space-between;
@@ -473,13 +650,13 @@ h3 {
 }
 
 .temp {
-  font-size: 7em;
+  font-size: 5em;
   margin: 0;
 }
 
 .weather img {
-  display: block;
-  margin: 0.5em 0;
+  max-width: 7rem;
+  max-height: 7rem;
 }
 
 .panel {
@@ -547,13 +724,10 @@ h3 {
 }
 
 .panel ul li {
-  color: #ccc;
+  color: #fff;
   margin: 2.5em 0;
 }
 
-.panel ul h4 {
-  margin: 3em 0;
-}
 
 .city {
   display: block;
@@ -592,16 +766,15 @@ h3 {
 
 
 .dropdown-wrapper {
-  max-width: 12rem;
+  max-width: 100%;
   position: relative;
   margin: 0 auto;
 
-
   .selected-item {
-    height: 2rem;
+    height: auto;
     border: 2px solid lightgray;
-    border-radius: 4px;
-    padding: 5px 10px;
+    border-radius: 7px;
+    padding: 10px;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -631,6 +804,7 @@ h3 {
     max-height: 0px;
     overflow: hidden;
 
+
     &.visible {
       visibility: visible;
       max-height: 450px;
@@ -638,31 +812,40 @@ h3 {
     }
 
     input {
-      width: 90%;
+      background: transparent;
+      width: 100%;
+      height: auto;
+      margin-top: 1rem;
       border: 2px solid lightgray;
-      font-size: 16px;
-      padding-left: 8px;
+      font-size: 18px;
+      border-radius: 7px;
+      padding: 10px;
+      color: #fff;
+    }
+
+    input::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+      opacity: 1; /* Firefox */
+      color: #fff;
     }
 
     .options {
       width: 100%;
 
       ul {
+        padding: 0 0 0em 0;
         list-style: none;
         text-align: left;
-        padding-left: 8px;
-        max-height: 180px;
+        max-height: 200px;
         overflow-y: scroll;
         overflow-x: hidden;
         border: 1px solid lightgray;
 
         li {
-          width: 100%;
+          margin: 0 !important;
           border-bottom: 1px solid lightgray;
-          padding: 10px;
-          background-color: #f1f1f1;
+          padding: 20px;
           cursor: pointer;
-          font-size: 16px;
+          font-size: 18px;
 
           &:hover {
             background: #70878a;
