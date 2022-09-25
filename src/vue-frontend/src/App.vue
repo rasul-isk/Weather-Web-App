@@ -14,8 +14,7 @@ export default {
   components: {
     PageLoader,
     Weather
-  },
-  // mounted: function () { }
+  }
 }
 </script>
 

@@ -3,15 +3,12 @@
     <div ref="main" class="weather-app" :class="this.backgroundImage">
       <div class="container">
 
-
-        <!--        <h3 class="brand">Weather in Estonia</h3>-->
-
         <div class="switch-button" style="margin-left: auto;">
-          <div @click="this.dayTime='day', selectItem(city)" class="day-button"
-               :class="this.dayTime=='day' ? 'selected' : 'unSelected'">Day
+          <div :class="this.dayTime==='day' ? 'selected' : 'unSelected'" class="day-button"
+               @click="this.dayTime='day'; selectItem(city);">Day
           </div>
-          <div @click="this.dayTime='night', selectItem(city)" class="night-button"
-               :class="this.dayTime=='night' ? 'selected' : 'unSelected'">Night
+          <div :class="this.dayTime==='night' ? 'selected' : 'unSelected'" class="night-button"
+               @click="this.dayTime='night'; selectItem(city); ">Night
           </div>
         </div>
 
@@ -24,20 +21,21 @@
         </div>
 
         <div style="padding-bottom: 1em; padding-right: 1em; padding-left: 2.15em">
-          <!--          <h1 style="font-size: 8em">{{ this.info[0].get(this.dayTime).get('tempmax') }}°</h1>-->
-          <!--          <h1 v-if = "this.dayTime = 'night'" style="font-size: 8em">{{ this.info[0].get(this.dayTime).get('places').get(this.city).get('tempmin') }}°</h1>-->
-          <!--          <h1 v-if = "this.dayTime = 'day'" style="font-size: 8em">{{ this.info[0].get(this.dayTime).get('places').get(this.city).get('tempmax') }}°</h1>-->
-          <h1 v-if="this.dayTime == 'day'" style="font-size: 8em">{{ this.cityInfo.get('tempmax') }}°</h1>
+          <h1 v-if="this.dayTime === 'day'" style="font-size: 8em">{{ this.cityInfo.get('tempmax') }}°</h1>
           <h1 v-else style="font-size: 8em">{{ this.cityInfo.get('tempmin') }}°</h1>
           <div class="city-time">
             <h1 style="font-size: 5em">{{ this.cityInfo.get('name') }}</h1>
           </div>
 
           <div class="weather">
-            <img v-if="this.backgroundImage === 'bg-sunny'" src="./images/icons/sunIco.png" alt="sun Icon"/>
-            <img v-if="this.backgroundImage === 'bg-cloudy'" src="./images/icons/cloudIco.png" alt="cloud Icon"/>
-            <img v-if="this.backgroundImage === 'bg-rain'" src="./images/icons/rainIco.png" alt="rain Icon"/>
-            <img v-if="this.backgroundImage === 'bg-snow'" src="./images/icons/snowIco.png" alt="snow Icon"/>
+            <img v-if="this.backgroundImage === 'bg-sunny'" alt="sun Icon" rel="preload"
+                 src="./images/icons/sunIco.png"/>
+            <img v-if="this.backgroundImage === 'bg-cloudy'" alt="cloud Icon" rel="preload"
+                 src="./images/icons/cloudIco.png"/>
+            <img v-if="this.backgroundImage === 'bg-rain'" alt="rain Icon" rel="preload"
+                 src="./images/icons/rainIco.png"/>
+            <img v-if="this.backgroundImage === 'bg-snow'" alt="snow Icon" rel="preload"
+                 src="./images/icons/snowIco.png"/>
           </div>
 
           <div class="weather">
@@ -90,30 +88,20 @@
                 this.info[0].get(this.dayTime).get('text')
               }}</span>
             </li>
-            <!--
-                      <li>
-                        <span v-if="this.dayTime == 'day'">Maximum Temperature</span>
-                        <span v-if="this.dayTime == 'night'">Minimum Temperature</span>
 
-                        <span v-if="this.dayTime == 'day'" class="humidity">{{ this.cityInfo.get('tempmax') }}°</span>
-                        <span v-if="this.dayTime == 'night'" class="humidity">{{ this.cityInfo.get('tempmin') }}°</span>
-                      </li>
-            -->
-
-            <li v-if="this.info[0].get(this.dayTime).get('peipsi') != ''">
+            <li v-if="this.info[0].get(this.dayTime).get('peipsi') !== ''">
             <span class="cloud"> <h5 style="font-style: italic">Peipsi</h5>
               {{
                 this.info[0].get(this.dayTime).get('peipsi')
               }}</span>
             </li>
 
-            <li v-if="this.info[0].get(this.dayTime).get('sea') != ''">
+            <li v-if="this.info[0].get(this.dayTime).get('sea') !== ''">
             <span class="cloud"> <h5 style="font-style: italic">Sea</h5>
               {{
                 this.info[0].get(this.dayTime).get('sea')
               }}</span>
             </li>
-
 
           </div>
         </ul>
@@ -136,11 +124,6 @@
               <span style="width: 33.3%; text-align: right;">Speed</span>
             </div>
             <hr style="border-top:dashed;">
-            <!--                        <li>
-                                      <span style="width: 33.3%; text-align: left">Location</span>
-                                      <span style="width: 33.3%; text-align: center">Direction</span>
-                                      <span style="width: 33.3%; text-align: right">Speed</span>
-                                    </li>-->
             <li class="wind" v-for="wind in this.info[0].get(this.dayTime).get('winds')" v-bind:key="wind.id">
               <span style="width: 33.3%; text-align: left">{{ wind.get('name') }}</span>
               <span style="width: 33.3%; text-align: center">{{ wind.get('direction') }} </span>
@@ -166,15 +149,14 @@
 
             <hr>
             <li>
-              <!--              style="padding: 0px 1em"-->
-              <div @click="this.selectedWeatherBtn = [1,0,0],this.selectedDateIndex=1" class="weather-button"
+              <div class="weather-button" @click="this.selectedWeatherBtn = [1,0,0]; this.selectedDateIndex=1;"
                    :class="selectedWeatherBtn[0] ? 'selected' : 'unSelected'">
                 <h5 style="text-align: center">{{ this.info[1].get('date').slice(8, 10) }}
                   {{ months[parseInt(this.info[1].get('date').slice(5, 7)) - 1] }}
                   '{{ this.info[1].get('date').slice(2, 4) }}</h5>
               </div>
 
-              <div @click="this.selectedWeatherBtn = [0,1,0],this.selectedDateIndex=2" class="weather-button"
+              <div class="weather-button" @click="this.selectedWeatherBtn = [0,1,0]; this.selectedDateIndex=2;"
                    :class="selectedWeatherBtn[1] ? 'selected' : 'unSelected'">
                 <h5 style="text-align: center">{{ this.info[2].get('date').slice(8, 10) }}
                   {{ months[parseInt(this.info[2].get('date').slice(5, 7)) - 1] }} '{{
@@ -182,7 +164,7 @@
                   }}</h5>
               </div>
 
-              <div @click="this.selectedWeatherBtn = [0,0,1],this.selectedDateIndex=3" class="weather-button"
+              <div class="weather-button" @click="this.selectedWeatherBtn = [0,0,1];this.selectedDateIndex=3;"
                    :class="selectedWeatherBtn[2] ? 'selected' : 'unSelected'">
                 <h5 style="text-align: center">{{ this.info[3].get('date').slice(8, 10) }}
                   {{ months[parseInt(this.info[2].get('date').slice(5, 7)) - 1] }} '{{
@@ -219,55 +201,6 @@
                   this.info[this.selectedDateIndex].get('night').get('tempmin')
                 }}° to {{ this.info[this.selectedDateIndex].get('night').get('tempmax') }}° </span>
             </li>
-            <!--
-            <h5 style="text-align: center">{{ this.info[2].get('date').slice(8, 10) }}
-              {{ months[parseInt(this.info[2].get('date').slice(5, 7)) - 1] }} '{{
-                this.info[2].get('date').slice(2, 4)
-              }}</h5>
-            <hr style="border-top:dashed;">
-            <li>
-              <span>General Information</span>
-              <span style="width: 65%;text-align: right;">{{ this.info[2].get(this.dayTime).get('text') }}</span>
-            </li>
-            <li>
-              <span>Phenomenon</span>
-              <span>{{ this.info[2].get(this.dayTime).get('phenomenon') }}</span>
-            </li>
-            <li class="wind">
-              <span>Daytime Temperature</span>
-              <span>{{ this.info[2].get('day').get('tempmin') }}° to {{ this.info[2].get('day').get('tempmax') }}° </span>
-            </li>
-            <li class="wind">
-              <span>Nighttime Temperature</span>
-              <span>{{ this.info[2].get('night').get('tempmin') }}° to {{
-                  this.info[2].get('night').get('tempmax')
-                }}° </span>
-            </li>
-
-            <hr>
-            <h5 style="text-align: center">{{ this.info[3].get('date').slice(8, 10) }}
-              {{ months[parseInt(this.info[3].get('date').slice(5, 7)) - 1] }} '{{
-                this.info[3].get('date').slice(2, 4)
-              }}</h5>
-            <hr style="border-top:dashed;">
-            <li>
-              <span>General Information</span>
-              <span style="width: 65%;text-align: right;">{{ this.info[3].get(this.dayTime).get('text') }}</span>
-            </li>
-            <li>
-              <span>Phenomenon</span>
-              <span>{{ this.info[3].get(this.dayTime).get('phenomenon') }}</span>
-            </li>
-            <li class="wind">
-              <span>Daytime Temperature</span>
-              <span>{{ this.info[3].get('day').get('tempmin') }}° to {{ this.info[3].get('day').get('tempmax') }}° </span>
-            </li>
-            <li class="wind">
-              <span>Nighttime Temperature</span>
-              <span>{{ this.info[3].get('night').get('tempmin') }}° to {{
-                  this.info[3].get('night').get('tempmax')
-                }}° </span>
-            </li>-->
 
           </div>
 
@@ -318,8 +251,9 @@ export default {
       }
     },
   },
-  mounted() {
-
+  created() {
+    this.getWeather();
+    setInterval(this.getNow, 1000);
   },
   methods: {
     getNow: function () {
@@ -327,11 +261,9 @@ export default {
       const hours = today.getHours() < 10 ? "0" + today.getHours().toString() : today.getHours();
       const minutes = today.getMinutes() < 10 ? "0" + today.getMinutes().toString() : today.getMinutes();
       const seconds = today.getSeconds() < 10 ? "0" + today.getSeconds().toString() : today.getSeconds();
-      const time = hours + ":" + minutes + ":" + seconds;
-      this.clock = time;
+      this.clock = hours + ":" + minutes + ":" + seconds;
     },
     selectItem(city) {
-      // this.$refs.main.style.opacity = '0';
       this.city = city;
       this.selectedCity = city;
       this.cityInfo = this.info[0].get(this.dayTime).get('places').filter((el) => {
@@ -364,10 +296,9 @@ export default {
       // console.log(this.cityInfo);
     },
     getWeather() {
-      const weatherAPI = 'http://www.ilmateenistus.ee/ilma_andmed/xml/forecast.php?lang=eng';
-      const proxyURL = `https://thingproxy.freeboard.io/fetch/${weatherAPI}`
+      const localURL = 'http://localhost:8081/api';
 
-      fetch(proxyURL).then(response => response.text())
+      fetch(localURL).then(response => response.text())
           .then(data => {
             let parser = new DOMParser();
             let xml = parser.parseFromString(data, "text/xml");
@@ -499,14 +430,9 @@ export default {
             this.today = "Mon" + ", " + dd + " " + this.months[parseInt(mm) - 1] + " '" + yyyy.toString().slice(2);
             console.log(this.cityArray);
             console.log(this.cityInfo);
-            this.selectedDate = this.info[0].get('date');
           });
 
     }
-  },
-  created() {
-    this.getWeather()
-    setInterval(this.getNow, 1000);
   }
 }
 </script>
@@ -563,6 +489,10 @@ h4 {
 }
 
 
+div#preload {
+  display: none;
+}
+
 .weather-app::before {
   content: "";
   position: absolute;
@@ -578,7 +508,6 @@ h4 {
   margin-right: 2em;
   margin-top: 2em;
   background: rgba(110, 110, 110, 0.25);
-  box-shadow: 0 8x 32px 0 rgba(0, 0, 0, 0.3);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
   border: 2px solid rgba(255, 255, 255, 0.18);
@@ -601,7 +530,6 @@ h4 {
 
 .weather-button {
   background: rgba(110, 110, 110, 0.25);
-  box-shadow: 0 8x 32px 0 rgba(0, 0, 0, 1);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
   border: 2px solid rgba(255, 255, 255, 0.18);
@@ -659,11 +587,7 @@ h4 {
   justify-content: space-between;
   align-items: flex-start;
   flex-direction: column;
-  padding: 2em 3em 4em 3em;
-
-
   margin-right: 0;
-  padding: 0;
   margin-left: 0;
 }
 
@@ -680,8 +604,7 @@ h4 {
 }
 
 .city-time h1 {
-  margin: 0;
-  margin-bottom: 0.2em;
+  margin: 0 0 0.2em;
   font-size: 3em;
 }
 
@@ -702,7 +625,6 @@ h4 {
   top: 0;
   right: 0;
   background: rgba(110, 110, 110, 0.25);
-  box-shadow: 0 8x 32px 0 rgba(0, 0, 0, 0.3);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.18);
@@ -751,7 +673,7 @@ h4 {
   outline: none;
 }
 
-.search:placeholder {
+.search::placeholder {
   color: #ccc;
 }
 
@@ -841,7 +763,7 @@ h4 {
     padding: 10px;
 
     visibility: hidden;
-    max-height: 0px;
+    max-height: 0;
     overflow: hidden;
 
 
@@ -872,7 +794,7 @@ h4 {
       width: 100%;
 
       ul {
-        padding: 0 0 0em 0;
+        padding: 0 0 0 0;
         list-style: none;
         text-align: left;
         max-height: 200px;
