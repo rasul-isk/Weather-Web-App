@@ -19,6 +19,14 @@ Note: this is only overall illustration of data structure, not exact one. For ex
 ___
 
 # How to execute this project
+
+1) Run Application by IntelliJ IDEA (Shift + F10 on windows 10)
+2) Use these 2 commands:
+```
+ cd .\src\vue-frontend\
+ npm run serve
+```
+
 Video below demonstrates functionality of website and gives clear intruction for installing project.
 
 https://user-images.githubusercontent.com/73297277/192157651-3be3bf38-7f3c-4a59-bb26-504bde3043ab.mp4
