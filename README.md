@@ -26,6 +26,7 @@ ___
  cd .\src\vue-frontend\
  npm run serve
 ```
+!!! In case if project doesn't run properly after ```npm run serve```, try to use ````npm install``` and then ```nom run serve```. !!!
 
 Video below demonstrates functionality of website and gives clear intruction for installing project.
 
